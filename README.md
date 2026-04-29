@@ -1,5 +1,7 @@
 # crate-ci/typos
 
+Source code spell checker
+
 Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at [https://github.com/crate-ci/typos](https://github.com/crate-ci/typos).
 
 ## Versions

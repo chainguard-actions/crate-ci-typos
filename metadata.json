@@ -1,5 +1,6 @@
 {
   "owner": "crate-ci",
   "name": "typos",
-  "visibility": ""
+  "visibility": "internal",
+  "description": "Source code spell checker"
 }
