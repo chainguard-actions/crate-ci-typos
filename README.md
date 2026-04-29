@@ -1,6 +1,12 @@
 # crate-ci/typos
 
-Hardened GitHub Action by [Chainguard](https://www.chainguard.dev).
+Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at [https://github.com/crate-ci/typos](https://github.com/crate-ci/typos).
+
+## Versions
+
+| Version | Tag | Upstream commit |
+|---------|-----|-----------------|
+| v1.44.0 | [`v1.44.0`](https://github.com/chainguard-actions/typos/tree/v1.44.0) | — |
 
 ## Privacy
 
