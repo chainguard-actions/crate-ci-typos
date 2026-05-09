@@ -2,5 +2,6 @@
   "owner": "crate-ci",
   "name": "typos",
   "visibility": "internal",
-  "description": "Source code spell checker"
+  "description": "Source code spell checker",
+  "block_publish": false
 }
