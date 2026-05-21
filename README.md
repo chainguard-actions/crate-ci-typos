@@ -8,7 +8,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 
 | Version | Tag | Upstream commit |
 |---------|-----|-----------------|
-| v1.44.0 | [`v1.44.0`](https://github.com/chainguard-actions/typos/tree/v1.44.0) | — |
+| v1.44.0 | [`v1.44.0`](https://github.com/chainguard-actions/crate-ci-typos/tree/v1.44.0) | — |
 
 ## Privacy
 
