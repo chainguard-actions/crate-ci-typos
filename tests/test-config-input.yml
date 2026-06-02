@@ -1,0 +1,16 @@
+name: Test config input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          files: ${{ github.workspace }}/actions/hardened/crate-ci--typos/v1.47.0/tests/fixtures/typos-config/sample.txt
+          config: ${{ github.workspace }}/actions/hardened/crate-ci--typos/v1.47.0/tests/fixtures/typos-config/_typos.toml
+      - name: Assert action succeeded with config input
+        run: |
+          echo "PASS: typos action ran successfully with custom config input"

@@ -1,0 +1,10 @@
+[default]
+extend-ignore-identifiers-re = []
+
+[files]
+extend-exclude = []
+
+[default.extend-words]
+# Allow British English spellings as custom words
+colour = "colour"
+flavour = "flavour"
