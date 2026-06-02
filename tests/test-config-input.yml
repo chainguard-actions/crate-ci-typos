@@ -6,11 +6,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Create test file
+        run: |
+          mkdir -p /tmp/typos-config-test
+          # Use 'teh' which is allowed by our custom config
+          echo "This file uses teh as an allowed word via custom config." > /tmp/typos-config-test/sample.txt
       - id: action
         uses: .
         with:
-          files: ${{ github.workspace }}/actions/hardened/crate-ci--typos/v1.47.0/tests/fixtures/typos-config/sample.txt
-          config: ${{ github.workspace }}/actions/hardened/crate-ci--typos/v1.47.0/tests/fixtures/typos-config/_typos.toml
+          files: /tmp/typos-config-test/sample.txt
+          config: ${{ github.workspace }}/actions/hardened/crate-ci--typos/v1.47.0/tests/fixtures/typos-config/typos.toml
       - name: Assert action succeeded with config input
         run: |
-          echo "PASS: typos action ran successfully with custom config input"
+          echo "PASS: typos ran successfully with custom config input"

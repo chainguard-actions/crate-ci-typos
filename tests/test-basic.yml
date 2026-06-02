@@ -1,4 +1,4 @@
-name: Test basic usage (no inputs)
+name: Test basic usage
 on:
   workflow_dispatch:
 jobs:
@@ -9,11 +9,11 @@ jobs:
       - name: Create a clean file to check
         run: |
           mkdir -p /tmp/typos-test
-          echo "This is a simple test file with correct spelling." > /tmp/typos-test/sample.txt
+          echo "This is a clean file with no spelling errors." > /tmp/typos-test/clean.txt
       - id: action
         uses: .
         with:
-          files: /tmp/typos-test/sample.txt
+          files: /tmp/typos-test/clean.txt
       - name: Assert action succeeded
         run: |
-          echo "PASS: typos action ran successfully with no spelling errors"
+          echo "PASS: typos ran successfully on a clean file"
