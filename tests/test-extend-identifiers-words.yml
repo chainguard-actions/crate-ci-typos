@@ -1,0 +1,18 @@
+name: Test extend_identifiers and extend_words inputs
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Run typos with extend_identifiers and extend_words
+        id: action
+        uses: .
+        with:
+          files: actions/hardened/crate-ci--typos/v1.47.2/tests/fixtures/sample.txt
+          extend_identifiers: "Sochat,Vanessa"
+          extend_words: "typos,crate"
+      - name: Assert action completed successfully
+        run: |
+          echo "PASS: typos action ran successfully with extend_identifiers and extend_words"
