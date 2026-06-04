@@ -1,0 +1,22 @@
+name: Test extend_identifiers and extend_words inputs
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Create fixture file with custom identifiers and words
+        run: |
+          mkdir -p /tmp/typos-extend-test
+          # Use a word that typos might flag but we allow via extend_words
+          echo "This file references Sochat and uses the word baz." > /tmp/typos-extend-test/sample.txt
+      - id: action
+        uses: .
+        with:
+          files: /tmp/typos-extend-test/sample.txt
+          extend_identifiers: Sochat
+          extend_words: baz
+      - name: Assert action succeeded with extend inputs
+        run: |
+          echo "PASS: typos ran successfully with extend_identifiers and extend_words inputs"

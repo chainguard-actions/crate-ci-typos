@@ -1,0 +1,6 @@
+[default]
+extend-ignore-identifiers-re = []
+
+[default.extend-words]
+# Allow the word "teh" as a known identifier in this project
+teh = "teh"
