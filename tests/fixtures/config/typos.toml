@@ -1,0 +1,7 @@
+[default.extend-words]
+# Mark 'teh' as valid (a known surname)
+teh = "teh"
+
+[default.extend-identifiers]
+# Mark 'Sochat' as a valid identifier (a name)
+Sochat = "Sochat"

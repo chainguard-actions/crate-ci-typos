@@ -1,4 +1,4 @@
-name: Test files input
+name: Test config input
 on:
   workflow_dispatch:
 jobs:
@@ -10,7 +10,8 @@ jobs:
         uses: .
         with:
           files: actions/hardened/crate-ci--typos/v1.47.2/tests/fixtures/clean/sample.txt
-      - name: Assert action completed successfully with files input
+          config: actions/hardened/crate-ci--typos/v1.47.2/tests/fixtures/config/typos.toml
+      - name: Assert action completed successfully with custom config
         run: |
-          echo "Action completed without error when files input is specified"
+          echo "Action completed without error when custom config is specified"
           echo "PASS"

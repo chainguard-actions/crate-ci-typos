@@ -1,0 +1,3 @@
+This is a clean file with no spelling mistakes.
+It contains valid English words only.
+The quick brown fox jumps over the lazy dog.

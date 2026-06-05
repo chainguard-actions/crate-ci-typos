@@ -1,4 +1,4 @@
-name: Test files input
+name: Test extend_words and extend_identifiers inputs
 on:
   workflow_dispatch:
 jobs:
@@ -10,7 +10,9 @@ jobs:
         uses: .
         with:
           files: actions/hardened/crate-ci--typos/v1.47.2/tests/fixtures/clean/sample.txt
-      - name: Assert action completed successfully with files input
+          extend_words: teh,ther
+          extend_identifiers: Sochat,AttributeIDSupressMenu
+      - name: Assert action completed successfully with extend inputs
         run: |
-          echo "Action completed without error when files input is specified"
+          echo "Action completed without error when extend_words and extend_identifiers are specified"
           echo "PASS"
