@@ -9,8 +9,8 @@ jobs:
       - id: action
         uses: .
         with:
-          files: ${{ github.workspace }}/actions/hardened/crate-ci--typos/v1.46.3/tests/fixtures/typos-config/sample.txt
-          config: ${{ github.workspace }}/actions/hardened/crate-ci--typos/v1.46.3/tests/fixtures/typos-config/_typos.toml
-      - name: Assert action succeeded with config input
+          files: actions/hardened/crate-ci--typos/v1.46.3/tests/fixtures/sample.txt
+          config: actions/hardened/crate-ci--typos/v1.46.3/tests/fixtures/typos-config.toml
+      - name: Assert action completed with config input
         run: |
-          echo "PASS: typos ran successfully with custom config input"
+          echo "PASS: typos action ran with config input"

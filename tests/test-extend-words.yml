@@ -1,4 +1,4 @@
-name: Test basic usage
+name: Test extend_words input
 on:
   workflow_dispatch:
 jobs:
@@ -10,6 +10,7 @@ jobs:
         uses: .
         with:
           files: actions/hardened/crate-ci--typos/v1.46.3/tests/fixtures/sample.txt
-      - name: Assert action completed successfully
+          extend_words: "typos,musl"
+      - name: Assert action completed with extend_words input
         run: |
-          echo "PASS: typos action ran without errors"
+          echo "PASS: typos action ran with extend_words input"

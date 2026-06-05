@@ -6,14 +6,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: Create fixture file to check
-        run: |
-          mkdir -p /tmp/typos-files-test
-          echo "The quick brown fox jumps over the lazy dog." > /tmp/typos-files-test/sample.txt
       - id: action
         uses: .
         with:
-          files: /tmp/typos-files-test/sample.txt
-      - name: Assert action succeeded with files input
+          files: actions/hardened/crate-ci--typos/v1.46.3/tests/fixtures/sample.txt
+      - name: Assert action completed with files input
         run: |
-          echo "PASS: typos ran successfully with files input"
+          echo "PASS: typos action ran with files input"
