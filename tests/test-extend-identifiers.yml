@@ -6,12 +6,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Create a file with a custom identifier
+        run: |
+          mkdir -p /tmp/typos-test
+          echo "This file references Sochat as an author name." > /tmp/typos-test/identifiers.txt
       - id: action
         uses: .
         with:
-          files: actions/hardened/crate-ci--typos/v1.47.1/tests/fixtures/clean.txt
-          extend_identifiers: "Teh,Hte"
-      - name: Assert action completed successfully
+          files: /tmp/typos-test/identifiers.txt
+          extend_identifiers: Sochat
+      - name: Assert action succeeded
         run: |
-          echo "Action completed with extend_identifiers input"
-          echo "PASS"
+          echo "PASS: typos action completed successfully with extend_identifiers"
