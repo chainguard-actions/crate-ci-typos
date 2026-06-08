@@ -1,0 +1,3 @@
+This is a clean file with correct spelling.
+Hello world, this is a test file.
+The quick brown fox jumps over the lazy dog.

@@ -1,0 +1,3 @@
+[default.extend-words]
+# Allow the word "teh" as a valid word (common false positive test)
+teh = "teh"
