@@ -1,4 +1,4 @@
-name: Test files input
+name: Test extend_identifiers and extend_words inputs
 on:
   workflow_dispatch:
 jobs:
@@ -10,6 +10,8 @@ jobs:
         uses: .
         with:
           files: actions/hardened/crate-ci--typos/v1.46.2/tests/fixtures/clean.txt
-      - name: Assert action succeeded with files input
+          extend_identifiers: "Sochat,Vanessa"
+          extend_words: "typos,crate"
+      - name: Assert action succeeded with extend inputs
         run: |
-          echo "PASS: typos action ran successfully with files input"
+          echo "PASS: typos action ran successfully with extend_identifiers and extend_words inputs"

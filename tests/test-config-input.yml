@@ -1,4 +1,4 @@
-name: Test files input
+name: Test config input
 on:
   workflow_dispatch:
 jobs:
@@ -10,6 +10,7 @@ jobs:
         uses: .
         with:
           files: actions/hardened/crate-ci--typos/v1.46.2/tests/fixtures/clean.txt
-      - name: Assert action succeeded with files input
+          config: actions/hardened/crate-ci--typos/v1.46.2/tests/fixtures/typos-config/typos.toml
+      - name: Assert action succeeded with config input
         run: |
-          echo "PASS: typos action ran successfully with files input"
+          echo "PASS: typos action ran successfully with config input"
