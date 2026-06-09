@@ -1,0 +1,6 @@
+[default]
+extend-ignore-identifiers-re = []
+
+[type.py]
+extend-glob = ["*.py"]
+check-filename = false
