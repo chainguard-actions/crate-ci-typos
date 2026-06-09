@@ -1,0 +1,16 @@
+name: Test files input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Run typos action with files input
+        id: action
+        uses: .
+        with:
+          files: actions/hardened/crate-ci--typos/v1.46.2/tests/fixtures/clean.txt
+      - name: Assert action completed successfully
+        run: |
+          echo "PASS: typos action completed with files input"
