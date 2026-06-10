@@ -6,15 +6,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: Create a clean file to check
-        run: |
-          mkdir -p /tmp/typos-test
-          echo "This is a clean file with no spelling errors." > /tmp/typos-test/words.txt
       - id: action
         uses: .
         with:
-          files: /tmp/typos-test/words.txt
-          extend_words: customword,anotherword
-      - name: Assert action succeeded
+          files: actions/hardened/crate-ci--typos/v1.47.1/tests/fixtures/sample.txt
+          extend_words: "colour,colour"
+      - name: Assert action completed successfully
         run: |
-          echo "PASS: typos action completed successfully with extend_words"
+          echo "PASS: typos action ran successfully with extend_words"
