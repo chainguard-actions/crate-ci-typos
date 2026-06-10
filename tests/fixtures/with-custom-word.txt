@@ -1,0 +1,2 @@
+This file contains the word teh which is normally a typo but we allow it.
+The quick brown fox jumps over the lazy dog.

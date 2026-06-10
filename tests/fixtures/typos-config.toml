@@ -1,5 +1,6 @@
 [default]
 extend-ignore-identifiers-re = []
 
-[type.txt]
-extend-glob = ["*.txt"]
+[default.extend-words]
+# Allow 'teh' as a valid word in this config
+teh = "teh"

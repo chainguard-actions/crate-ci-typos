@@ -1,4 +1,4 @@
-name: Test basic usage
+name: Test basic usage with files input
 on:
   workflow_dispatch:
 jobs:
@@ -10,6 +10,6 @@ jobs:
         uses: .
         with:
           files: actions/hardened/crate-ci--typos/v1.46.3/tests/fixtures/sample.txt
-      - name: Assert action completed successfully
+      - name: Assert action completed without error
         run: |
-          echo "PASS: typos action ran without errors"
+          echo "PASS: typos action ran successfully on files input"
