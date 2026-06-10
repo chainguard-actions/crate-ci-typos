@@ -1,3 +1,3 @@
-This is a clean file with no spelling errors.
+This is a clean file with correct spelling.
+It contains no typos or misspelled words.
 The quick brown fox jumps over the lazy dog.
-Hello world from the typos action test.

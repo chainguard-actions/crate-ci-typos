@@ -12,4 +12,5 @@ jobs:
           files: actions/hardened/crate-ci--typos/v1.46.2/tests/fixtures/clean.txt
       - name: Assert action succeeded with files input
         run: |
-          echo "PASS: typos action ran successfully with files input"
+          echo "Action completed successfully with files input"
+          echo "PASS"

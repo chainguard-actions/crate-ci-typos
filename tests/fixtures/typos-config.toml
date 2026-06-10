@@ -1,0 +1,7 @@
+[default.extend-identifiers]
+# Allow custom identifier
+teh = "teh"
+
+[default.extend-words]
+# Allow custom word
+hte = "hte"

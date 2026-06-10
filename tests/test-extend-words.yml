@@ -1,4 +1,4 @@
-name: Test config input
+name: Test extend_words input
 on:
   workflow_dispatch:
 jobs:
@@ -10,8 +10,8 @@ jobs:
         uses: .
         with:
           files: actions/hardened/crate-ci--typos/v1.46.2/tests/fixtures/clean.txt
-          config: actions/hardened/crate-ci--typos/v1.46.2/tests/fixtures/typos-config.toml
-      - name: Assert action succeeded with config input
+          extend_words: "teh,hte"
+      - name: Assert action succeeded with extend_words input
         run: |
-          echo "Action completed successfully with config input"
+          echo "Action completed successfully with extend_words input"
           echo "PASS"

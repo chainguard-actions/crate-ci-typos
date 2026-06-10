@@ -1,0 +1,2 @@
+This file contains the identifier Sochat which is a person's name.
+It should be allowed when added to extend_identifiers.
