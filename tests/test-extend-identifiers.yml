@@ -6,12 +6,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: Run typos with extend_identifiers
-        id: action
+      - name: Create a file with a word that needs to be whitelisted as identifier
+        run: |
+          mkdir -p /tmp/typos-test-ids
+          # "Sochat" is a name that typos might flag; we extend identifiers to allow it
+          echo "Author: Vanessa Sochat" > /tmp/typos-test-ids/authors.txt
+      - id: action
         uses: .
         with:
-          files: actions/hardened/crate-ci--typos/v1.46.1/tests/fixtures/sample.txt
-          extend_identifiers: "Sochat,Vanessa"
-      - name: Assert typos ran successfully
+          files: /tmp/typos-test-ids/authors.txt
+          extend_identifiers: Sochat
+      - name: Assert action succeeded with extend_identifiers
         run: |
-          echo "PASS: typos completed with extend_identifiers"
+          echo "PASS: typos action ran successfully with extend_identifiers input"

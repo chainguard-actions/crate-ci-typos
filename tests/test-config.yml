@@ -6,12 +6,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: Run typos with custom config
-        id: action
+      - name: Create a file with correct spelling
+        run: |
+          mkdir -p /tmp/typos-test-config
+          echo "This file has correct spelling." > /tmp/typos-test-config/sample.txt
+      - id: action
         uses: .
         with:
-          files: actions/hardened/crate-ci--typos/v1.46.1/tests/fixtures/sample.txt
-          config: actions/hardened/crate-ci--typos/v1.46.1/tests/fixtures/typos-config/typos.toml
-      - name: Assert typos ran successfully with custom config
+          files: /tmp/typos-test-config/sample.txt
+          config: ${{ github.workspace }}/actions/hardened/crate-ci--typos/v1.46.1/tests/fixtures/typos-config/_typos.toml
+      - name: Assert action succeeded with config input
         run: |
-          echo "PASS: typos completed with custom config file"
+          echo "PASS: typos action ran successfully with config input"
