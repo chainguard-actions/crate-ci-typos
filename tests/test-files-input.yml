@@ -6,15 +6,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: Create test files
-        run: |
-          mkdir -p /tmp/typos-files-test
-          echo "Hello world, this is a test file." > /tmp/typos-files-test/sample.txt
-          echo "Another clean file here." > /tmp/typos-files-test/other.txt
       - id: action
         uses: .
         with:
-          files: /tmp/typos-files-test/sample.txt
-      - name: Assert action succeeded with files input
+          files: actions/hardened/crate-ci--typos/v1.47.0/tests/fixtures/clean.txt
+      - name: Assert action completed successfully with files input
         run: |
-          echo "PASS: typos ran successfully with files input"
+          echo "Action completed with files input"
+          echo "PASS"

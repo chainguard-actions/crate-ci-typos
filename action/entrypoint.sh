@@ -14,7 +14,7 @@ CMD_NAME="typos"
 COMMAND="${_INSTALL_DIR}/${CMD_NAME}"
 
 TARGET=${INPUT_FILES:-"."}
-if [[ -z $(ls ${TARGET} 2>/dev/null) ]]; then
+if [[ -z $(ls "${TARGET}" 2>/dev/null) ]]; then
     log "ERROR: Input files (${TARGET}) not found"
     exit 1
 fi
@@ -50,23 +50,23 @@ if [[ ! -x ${COMMAND} ]]; then
 fi
 log "jq: $(jq --version)"
 
-ARGS="${TARGET}"
+ARGS=("${TARGET}")
 
 # Ignore implicit configuration files
 if [ "${INPUT_ISOLATED:-false}" == "true" ]; then
-    ARGS+=" --isolated"
+    ARGS+=("--isolated")
 fi
 
 # Write changes to the repository
 if [ "${INPUT_WRITE_CHANGES:-false}" == "true" ]; then
-    ARGS+=" --write-changes"
+    ARGS+=("--write-changes")
 fi
 
 # Use a custom configuration file
 if [[ -n "${INPUT_CONFIG:-}" ]]; then
-    ARGS+=" --config ${INPUT_CONFIG}"
+    ARGS+=("--config" "${INPUT_CONFIG}")
 fi
 
-log "$ ${COMMAND} ${ARGS}"
-${COMMAND} ${ARGS} --format json | ${SOURCE_DIR}/format_gh.sh || true
-${COMMAND} ${ARGS}
+log "$ ${COMMAND} ${ARGS[*]}"
+"${COMMAND}" "${ARGS[@]}" --format json | "${SOURCE_DIR}/format_gh.sh" || true
+"${COMMAND}" "${ARGS[@]}"

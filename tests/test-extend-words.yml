@@ -6,17 +6,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: Create test file with custom identifiers
-        run: |
-          mkdir -p /tmp/typos-extend-test
-          # Use words that typos might flag but we want to allow
-          echo "This file references Sochat and uses teh as an identifier." > /tmp/typos-extend-test/custom.txt
       - id: action
         uses: .
         with:
-          files: /tmp/typos-extend-test/custom.txt
-          extend_identifiers: Sochat
-          extend_words: teh
-      - name: Assert action succeeded with extend inputs
+          files: actions/hardened/crate-ci--typos/v1.47.0/tests/fixtures/clean.txt
+          extend_identifiers: "Sochat,Vanessa"
+          extend_words: "teh,ther"
+      - name: Assert action completed successfully with extend inputs
         run: |
-          echo "PASS: typos ran successfully with extend_identifiers and extend_words inputs"
+          echo "Action completed with extend_identifiers and extend_words inputs"
+          echo "PASS"

@@ -1,0 +1,7 @@
+[default.extend-identifiers]
+# Allow custom identifiers
+Sochat = "Sochat"
+
+[default.extend-words]
+# Allow custom words
+teh = "teh"
