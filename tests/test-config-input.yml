@@ -6,12 +6,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: Run typos with custom config file
-        id: action
+      - name: Create test file and custom config
+        run: |
+          mkdir -p /tmp/typos-config-test
+          # Create a file with "teh" which is a known typo for "the"
+          # The custom config will extend-words to allow it
+          echo "# teh project" > /tmp/typos-config-test/readme.txt
+          echo "This is a correctly spelled file." >> /tmp/typos-config-test/readme.txt
+          # Create a custom typos config that allows "teh" as a valid word
+          cat > /tmp/typos-config-test/typos.toml << 'EOF'
+[default.extend-words]
+teh = "teh"
+EOF
+      - id: action
         uses: .
         with:
-          files: actions/hardened/crate-ci--typos/v1.47.2/tests/fixtures/sample.txt
-          config: actions/hardened/crate-ci--typos/v1.47.2/tests/fixtures/typos-config.toml
-      - name: Assert action completed successfully
+          files: /tmp/typos-config-test/readme.txt
+          config: /tmp/typos-config-test/typos.toml
+      - name: Assert action succeeded with config input
         run: |
-          echo "PASS: typos action ran successfully with custom config"
+          echo "PASS: typos ran successfully with custom config input"

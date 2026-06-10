@@ -1,0 +1,22 @@
+name: Test extend_identifiers input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Create test file with a custom identifier
+        run: |
+          mkdir -p /tmp/typos-identifiers-test
+          # Use an identifier that typos might flag - we extend it to be ignored
+          echo "# Project by Sochat" > /tmp/typos-identifiers-test/readme.txt
+          echo "This file is correctly spelled." >> /tmp/typos-identifiers-test/readme.txt
+      - id: action
+        uses: .
+        with:
+          files: /tmp/typos-identifiers-test/readme.txt
+          extend_identifiers: Sochat
+      - name: Assert action succeeded with extend_identifiers input
+        run: |
+          echo "PASS: typos ran successfully with extend_identifiers input"

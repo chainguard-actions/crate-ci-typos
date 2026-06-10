@@ -6,11 +6,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Create test files with correct spelling
+        run: |
+          mkdir -p /tmp/typos-files-test
+          echo "The quick brown fox jumps over the lazy dog." > /tmp/typos-files-test/readme.txt
+          echo "Hello world, this is a test file." > /tmp/typos-files-test/notes.txt
       - id: action
         uses: .
         with:
-          files: actions/hardened/crate-ci--typos/v1.47.2/tests/fixtures/clean/sample.txt
-      - name: Assert action completed successfully with files input
+          files: /tmp/typos-files-test
+      - name: Assert action succeeded with files input
         run: |
-          echo "Action completed without error when files input is specified"
-          echo "PASS"
+          echo "PASS: typos ran successfully with files input pointing to a directory"

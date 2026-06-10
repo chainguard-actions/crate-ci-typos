@@ -1,0 +1,23 @@
+name: Test extend_words input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Create test file with a word that needs to be extended
+        run: |
+          mkdir -p /tmp/typos-words-test
+          # "teh" is a known typo for "the" in typos dictionary
+          # We extend it so typos accepts it as valid
+          echo "# teh project" > /tmp/typos-words-test/readme.txt
+          echo "This is a correctly spelled file." >> /tmp/typos-words-test/readme.txt
+      - id: action
+        uses: .
+        with:
+          files: /tmp/typos-words-test/readme.txt
+          extend_words: teh
+      - name: Assert action succeeded with extend_words input
+        run: |
+          echo "PASS: typos ran successfully with extend_words input"
