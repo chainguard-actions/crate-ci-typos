@@ -1,0 +1,21 @@
+name: Test isolated and write_changes inputs
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Create a clean text file to check
+        run: |
+          mkdir -p /tmp/typos-isolated-test
+          echo "This file has correct spelling throughout." > /tmp/typos-isolated-test/content.txt
+      - id: action
+        uses: .
+        with:
+          files: /tmp/typos-isolated-test/content.txt
+          isolated: "true"
+          write_changes: "false"
+      - name: Assert action completed successfully with isolated input
+        run: |
+          echo "PASS: typos action ran with isolated=true and write_changes=false without errors"

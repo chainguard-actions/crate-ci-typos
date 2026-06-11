@@ -1,0 +1,3 @@
+This is a sample text file with correct spelling.
+The quick brown fox jumps over the lazy dog.
+All words in this file are spelled correctly.
