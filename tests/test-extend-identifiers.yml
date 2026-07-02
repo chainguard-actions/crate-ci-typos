@@ -1,0 +1,21 @@
+name: Test extend_identifiers input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Create file with custom identifier
+        run: |
+          mkdir -p /tmp/typos-test-identifiers
+          # "Sochat" might be flagged as a typo without extend_identifiers
+          echo "Author: Vanessa Sochat" > /tmp/typos-test-identifiers/README.md
+      - id: action
+        uses: .
+        with:
+          files: /tmp/typos-test-identifiers
+          extend_identifiers: Sochat
+      - name: Assert action succeeded
+        run: |
+          echo "PASS: action completed without error (extend_identifiers accepted)"

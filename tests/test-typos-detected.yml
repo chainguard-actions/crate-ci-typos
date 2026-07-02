@@ -1,0 +1,32 @@
+name: Test typos detection
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a file with known typos
+        run: |
+          mkdir -p /tmp/typos-test
+          # "teh" is a well-known typo for "the"
+          echo "teh quick brown fox" > /tmp/typos-test/typos.txt
+
+      - name: Run typos action and expect failure
+        id: action
+        uses: .
+        with:
+          files: /tmp/typos-test/typos.txt
+        continue-on-error: true
+
+      - name: Assert typos were detected (action should have failed)
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" != "failure" ]; then
+            echo "FAIL: expected action to fail when typos are present, but outcome was '$OUTCOME'"
+            exit 1
+          fi
+          echo "PASS: typos were correctly detected"

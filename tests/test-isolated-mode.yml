@@ -1,0 +1,23 @@
+name: Test isolated mode
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create test file with no typos
+        run: |
+          mkdir -p /tmp/typos-isolated-test
+          echo "This sentence is correctly spelled." > /tmp/typos-isolated-test/content.txt
+
+      - id: action
+        uses: .
+        with:
+          files: /tmp/typos-isolated-test/content.txt
+          isolated: "true"
+
+      - name: Assert action succeeded in isolated mode
+        run: |
+          echo "PASS: typos action completed successfully in isolated mode"
