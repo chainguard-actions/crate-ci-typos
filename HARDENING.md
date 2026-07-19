@@ -8,22 +8,30 @@
 
 **Test Policy SHA:** `843adf9e4b8f85d0c08b27b9d0b09dd094b54702`
 
-**Harden Agent Version:** `1`
+**Harden Agent Version:** `2`
 
-Action **crate-ci--typos/v1.48.0** was hardened automatically. 1 finding(s) were identified and resolved across 1 iteration(s).
+Action **crate-ci--typos/v1.48.0** was hardened automatically. 2 finding(s) were identified and resolved across 1 iteration(s).
 
 ## Findings Fixed
 
 ### script-injection (severity: high)
 
-Rule (b) violation: In action/entrypoint.sh, the user-controlled env var $INPUT_FILES (sourced from inputs.files) is assigned to $TARGET and then used unquoted in `ls ${TARGET}` (line 17) and later in `ARGS="${TARGET}"` (line 63). The $ARGS variable is subsequently used unquoted in the final command executions on lines 81-82: `${COMMAND} ${ARGS} --format json | ...` and `${COMMAND} ${ARGS}`. An attacker-controlled value in inputs.files containing shell metacharacters (`;`, `|`, `&`, `$(...)`, etc.) can cause command injection. Similarly, $INPUT_CONFIG is appended to $ARGS unquoted on line 77 (`ARGS+=" --config ${INPUT_CONFIG}"`), allowing the same attack via inputs.config. All these env vars hold values from action inputs set in action.yml's env: block and must be double-quoted when used in shell expansions.
+Rule (b) violation: In action/entrypoint.sh, the env var INPUT_FILES (sourced from inputs.files) is assigned to TARGET without quoting and then used unquoted in `ls ${TARGET}` and as `ARGS="${TARGET}"`. The final command `${COMMAND} ${ARGS}` is also executed unquoted, meaning shell metacharacters in the input value are interpreted by the shell. An attacker-controlled `inputs.files` value could inject arbitrary shell commands.
 
 Locations:
 
+- `action/entrypoint.sh:16`
 - `action/entrypoint.sh:17`
-- `action/entrypoint.sh:77`
-- `action/entrypoint.sh:81`
-- `action/entrypoint.sh:82`
+- `action/entrypoint.sh:50`
+
+### script-injection (severity: high)
+
+Rule (b) violation: In action/entrypoint.sh, the env var INPUT_CONFIG (sourced from inputs.config) is appended to ARGS unquoted: `ARGS+=" --config ${INPUT_CONFIG}"`. The final command `${COMMAND} ${ARGS}` is executed unquoted, so shell metacharacters in INPUT_CONFIG are interpreted by the shell. An attacker-controlled `inputs.config` value could inject arbitrary shell commands.
+
+Locations:
+
+- `action/entrypoint.sh:58`
+- `action/entrypoint.sh:61`
 
 ## Iteration Notes
 
@@ -33,9 +41,9 @@ Locations:
 
 **Notes:**
 
-Fixed script injection vulnerabilities in action/entrypoint.sh:
-1. Quoted `${TARGET}` in the `ls` check on line 17: `ls "${TARGET}"`
-2. Converted the `ARGS` string variable to a bash array (`ARGS=("${TARGET}")`) so arguments are properly isolated and not subject to word-splitting or shell metacharacter interpretation
-3. Changed `ARGS+=" --config ${INPUT_CONFIG}"` to `ARGS+=("--config" "${INPUT_CONFIG}")` so INPUT_CONFIG is a properly quoted, separate array element
-4. Changed final command executions from `${COMMAND} ${ARGS}` to `"${COMMAND}" "${ARGS[@]}"` to use proper array expansion with double quotes, preventing shell metacharacters in any input from being interpreted as shell commands
+Fixed two script injection vulnerabilities in action/entrypoint.sh:
+1. Quoted TARGET in the `ls` call: `ls "${TARGET}"` to prevent shell metacharacter interpretation from INPUT_FILES.
+2. Converted ARGS from a plain string to a bash array: `ARGS=("${TARGET}")` so each argument is a separate, properly-quoted element.
+3. Appended --config and INPUT_CONFIG as separate quoted array elements: `ARGS+=("--config" "${INPUT_CONFIG}")` instead of unquoted string concatenation.
+4. Executed the final commands using quoted array expansion: `"${COMMAND}" "${ARGS[@]}"` to prevent word splitting and glob expansion of attacker-controlled values.
 

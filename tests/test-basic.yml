@@ -1,0 +1,24 @@
+name: Test basic usage - no typos
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a file with no typos
+        run: |
+          mkdir -p /tmp/typos-test
+          echo "This is a clean file with correct spelling." > /tmp/typos-test/clean.txt
+
+      - name: Run typos on clean file
+        id: action
+        uses: .
+        with:
+          files: /tmp/typos-test/clean.txt
+          isolated: true
+
+      - name: Assert action passed (no typos found)
+        run: |
+          echo "PASS: typos action completed without errors on a clean file"

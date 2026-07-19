@@ -7,24 +7,26 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - name: Create test files and custom config
+      - name: Create test file and custom config
         run: |
-          mkdir -p /tmp/typos-config-test
-          # "teh" would normally be flagged as a typo for "the"
-          # but we configure typos to ignore it via extend-words
-          echo "teh quick brown fox" > /tmp/typos-config-test/content.txt
-          # Create a typos config that allows "teh" as a valid word
-          cat > /tmp/typos-config-test/typos.toml <<'EOF'
+          mkdir -p /tmp/typos-test
+          # "teh" is normally flagged as a typo for "the"
+          echo "teh quick brown fox" > /tmp/typos-test/sample.txt
+
+          # Create a custom typos config that marks "teh" as a valid word
+          cat > /tmp/typos-config.toml << 'EOF'
           [default.extend-words]
           teh = "teh"
           EOF
 
-      - id: action
+      - name: Run typos with custom config that allows the word
+        id: action
         uses: .
         with:
-          files: /tmp/typos-config-test/content.txt
-          config: /tmp/typos-config-test/typos.toml
+          files: /tmp/typos-test/sample.txt
+          config: /tmp/typos-config.toml
+          isolated: true
 
-      - name: Assert action succeeded with custom config
+      - name: Assert action passed (custom config was applied)
         run: |
-          echo "PASS: typos action completed successfully with custom config that allows 'teh'"
+          echo "PASS: typos action completed without errors using custom config"

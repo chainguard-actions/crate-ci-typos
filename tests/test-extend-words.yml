@@ -1,4 +1,4 @@
-name: Test extend_words input
+name: Test extend_words input accepted
 on:
   workflow_dispatch:
 jobs:
@@ -7,18 +7,19 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - name: Create test file with no typos
+      - name: Create a clean file to check
         run: |
-          mkdir -p /tmp/typos-words-test
-          # Use a clean file to verify extend_words doesn't break anything
-          echo "The quick brown fox jumps over the lazy dog." > /tmp/typos-words-test/content.txt
+          mkdir -p /tmp/typos-test
+          echo "This is a clean file with correct spelling." > /tmp/typos-test/clean.txt
 
-      - id: action
+      - name: Run typos with extend_words input on clean file
+        id: action
         uses: .
         with:
-          files: /tmp/typos-words-test/content.txt
-          extend_words: "somecustomword,anotherword"
+          files: /tmp/typos-test/clean.txt
+          isolated: true
+          extend_words: "someword"
 
-      - name: Assert action succeeded with extend_words
+      - name: Assert action passed
         run: |
-          echo "PASS: typos action completed successfully with extend_words input"
+          echo "PASS: typos action completed without errors when extend_words was provided"

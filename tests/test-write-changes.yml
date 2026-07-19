@@ -1,0 +1,40 @@
+name: Test write_changes input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a file with a known typo
+        run: |
+          mkdir -p /tmp/typos-test
+          # "teh" is a well-known typo for "the"
+          echo "teh quick brown fox" > /tmp/typos-test/fixme.txt
+          echo "Before fix:"
+          cat /tmp/typos-test/fixme.txt
+
+      - name: Run typos with write_changes enabled
+        id: action
+        uses: .
+        with:
+          files: /tmp/typos-test/fixme.txt
+          isolated: true
+          write_changes: true
+
+      - name: Assert typo was corrected in the file
+        run: |
+          echo "After fix:"
+          cat /tmp/typos-test/fixme.txt
+          CONTENT=$(cat /tmp/typos-test/fixme.txt)
+          echo "content: $CONTENT"
+          if echo "$CONTENT" | grep -q "teh"; then
+            echo "FAIL: expected 'teh' to be corrected to 'the', but file still contains 'teh'"
+            exit 1
+          fi
+          if ! echo "$CONTENT" | grep -q "the"; then
+            echo "FAIL: expected 'the' to appear in corrected file"
+            exit 1
+          fi
+          echo "PASS: typo was correctly auto-fixed by write_changes"
