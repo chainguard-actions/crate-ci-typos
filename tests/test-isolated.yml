@@ -1,0 +1,26 @@
+name: Test isolated mode
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create test files
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/tests/tmp-isolated"
+          cat > "$GITHUB_WORKSPACE/tests/tmp-isolated/sample.txt" << 'EOF'
+          This file has correct spelling throughout.
+          The quick brown fox jumps over the lazy dog.
+          EOF
+
+      - id: action
+        uses: .
+        with:
+          files: tests/tmp-isolated
+          isolated: "true"
+
+      - name: Assert action succeeded in isolated mode
+        run: |
+          echo "PASS: typos action completed in isolated mode without errors"

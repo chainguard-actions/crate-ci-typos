@@ -1,0 +1,28 @@
+name: Test extend_identifiers input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create test files with identifiers
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/tests/tmp-extend-ids"
+          # Create a file with correct spelling
+          cat > "$GITHUB_WORKSPACE/tests/tmp-extend-ids/sample.txt" << 'EOF'
+          This is a sample file with correct spelling.
+          The quick brown fox jumps over the lazy dog.
+          EOF
+
+      - id: action
+        uses: .
+        with:
+          files: tests/tmp-extend-ids
+          isolated: "true"
+          extend_identifiers: "Sochat,Vanessa"
+
+      - name: Assert action succeeded with extend_identifiers
+        run: |
+          echo "PASS: typos action completed with extend_identifiers without errors"

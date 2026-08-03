@@ -1,6 +1,11 @@
 {
   "owner": "crate-ci",
   "repo": "typos",
-  "version": "",
-  "url": "https://github.com/crate-ci/typos"
+  "version": "v1.49.0",
+  "commit_sha": "8a48f81b6c64dcfea44b3633223084c4be58ac5f",
+  "url": "https://github.com/crate-ci/typos",
+  "policy_sha": "d636be7e43ef829af6e853da6b3c7566db9f72fe",
+  "test_policy_sha": "843adf9e4b8f85d0c08b27b9d0b09dd094b54702",
+  "test_agent_version": "2",
+  "harden_agent_version": "2"
 }

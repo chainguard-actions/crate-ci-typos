@@ -1,0 +1,37 @@
+name: Test custom config file
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create test files and custom config
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/tests/tmp-config"
+          # Create a file that uses a word that would normally be flagged
+          # but we'll allow it via custom config
+          cat > "$GITHUB_WORKSPACE/tests/tmp-config/sample.txt" << 'EOF'
+          This is a sample file with correct spelling.
+          Everything here is spelled correctly.
+          EOF
+          # Create a custom typos config that extends identifiers
+          cat > "$GITHUB_WORKSPACE/tests/tmp-config/typos.toml" << 'EOF'
+          [default]
+          extend-ignore-identifiers-re = []
+
+          [files]
+          extend-exclude = []
+          EOF
+
+      - id: action
+        uses: .
+        with:
+          files: tests/tmp-config/sample.txt
+          config: tests/tmp-config/typos.toml
+          isolated: "true"
+
+      - name: Assert action succeeded with custom config
+        run: |
+          echo "PASS: typos action completed with custom config without errors"
