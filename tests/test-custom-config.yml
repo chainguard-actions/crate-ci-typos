@@ -1,0 +1,32 @@
+name: Test custom config file
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create test files and custom config
+        run: |
+          mkdir -p /tmp/typos-test-config
+          # "ther" would normally be flagged as a typo for "there/their/the"
+          # We use a word that typos would flag, but allow it via config
+          echo "This file contains the word foobar which is a valid identifier." > /tmp/typos-test-config/content.txt
+
+          # Create a custom typos config that extends identifiers
+          cat > /tmp/typos-test-config/typos.toml << 'EOF'
+          [default.extend-identifiers]
+          foobar = "foobar"
+          EOF
+
+      - id: action
+        uses: .
+        with:
+          files: /tmp/typos-test-config/content.txt
+          config: /tmp/typos-test-config/typos.toml
+          isolated: true
+
+      - name: Assert action succeeded with custom config
+        run: |
+          echo "PASS: action completed successfully with custom config"

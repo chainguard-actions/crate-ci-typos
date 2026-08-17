@@ -1,0 +1,24 @@
+name: Test isolated mode
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a clean file for isolated mode check
+        run: |
+          mkdir -p /tmp/typos-test-isolated
+          echo "This file has no spelling mistakes." > /tmp/typos-test-isolated/readme.txt
+          echo "Everything looks correct here." >> /tmp/typos-test-isolated/readme.txt
+
+      - id: action
+        uses: .
+        with:
+          files: /tmp/typos-test-isolated
+          isolated: true
+
+      - name: Assert action succeeded in isolated mode
+        run: |
+          echo "PASS: action completed successfully in isolated mode"

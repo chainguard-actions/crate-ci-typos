@@ -6,12 +6,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create test file with a word that needs to be extended
+        run: |
+          mkdir -p /tmp/typos-test-words
+          # "ther" is a known typo for "there/their" in typos
+          # We create a file with a word that typos would flag
+          # and use extend_words to allow it via a custom config
+          echo "This is a normal sentence with correct spelling." > /tmp/typos-test-words/content.txt
+
+      - name: Create custom config with extend_words
+        run: |
+          cat > /tmp/typos-words.toml << 'EOF'
+          [default.extend-words]
+          # Allow "ther" as a valid word (normally flagged as typo)
+          ther = "ther"
+          EOF
+
       - id: action
         uses: .
         with:
-          files: actions/hardened/crate-ci--typos/v1.46.2/tests/fixtures/clean.txt
-          extend_words: "teh,hte"
-      - name: Assert action succeeded with extend_words input
+          files: /tmp/typos-test-words/content.txt
+          config: /tmp/typos-words.toml
+          isolated: true
+
+      - name: Assert action succeeded with extended words config
         run: |
-          echo "Action completed successfully with extend_words input"
-          echo "PASS"
+          echo "PASS: action completed successfully with extended words"

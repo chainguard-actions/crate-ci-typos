@@ -1,0 +1,27 @@
+name: Test specific files input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create test files - one clean, one with typo
+        run: |
+          mkdir -p /tmp/typos-test-specific
+          # Clean file - no typos
+          echo "This file is clean and correct." > /tmp/typos-test-specific/clean.txt
+          # File with typo - but we won't check this one
+          echo "teh quick brown fox" > /tmp/typos-test-specific/typo.txt
+
+      - id: action
+        uses: .
+        with:
+          # Only check the clean file, not the typo file
+          files: /tmp/typos-test-specific/clean.txt
+          isolated: true
+
+      - name: Assert action succeeded when checking only the clean file
+        run: |
+          echo "PASS: action correctly checked only the specified file and found no typos"
