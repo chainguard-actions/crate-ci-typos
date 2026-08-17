@@ -1,4 +1,4 @@
-name: Test custom config input
+name: Test custom config file
 on:
   workflow_dispatch:
 jobs:
@@ -6,15 +6,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: Create a clean file to check
+
+      - name: Create custom config and test files
         run: |
-          mkdir -p /tmp/typos-test
-          echo "This is a clean file with no spelling errors." > /tmp/typos-test/config-test.txt
-      - id: action
+          mkdir -p "$GITHUB_WORKSPACE/tests/tmp"
+          printf '[default.extend-words]\nteh = "teh"\n' > "$GITHUB_WORKSPACE/tests/tmp/typos.toml"
+          echo "This is teh file with a custom config." > "$GITHUB_WORKSPACE/tests/tmp/custom.txt"
+
+      - name: Run typos action with custom config
+        id: action
         uses: .
         with:
-          files: /tmp/typos-test/config-test.txt
-          config: ${{ github.workspace }}/actions/hardened/crate-ci--typos/v1.47.1/tests/fixtures/typos-config/typos.toml
-      - name: Assert action succeeded
+          files: tests/tmp/custom.txt
+          config: tests/tmp/typos.toml
+          isolated: true
+
+      - name: Assert action succeeded with custom config
         run: |
-          echo "PASS: typos action completed successfully with custom config"
+          echo "PASS: typos action completed successfully with custom config that allows 'teh'"

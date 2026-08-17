@@ -1,4 +1,4 @@
-name: Test extend words
+name: Test basic usage - no typos
 on:
   workflow_dispatch:
 jobs:
@@ -7,14 +7,13 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - name: Run typos action with extend_words input on clean file
+      - name: Run typos action on clean fixture file
         id: action
         uses: .
         with:
           files: tests/fixtures/clean.txt
           isolated: true
-          extend_words: "someword"
 
-      - name: Assert action succeeded with extended words input
+      - name: Assert action succeeded
         run: |
-          echo "PASS: typos action completed successfully with extend_words input provided"
+          echo "PASS: typos action completed successfully on clean file"

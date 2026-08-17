@@ -1,3 +1,4 @@
 This is a clean file with correct spelling.
-Hello world, this is a test file.
-The quick brown fox jumps over the lazy dog.
+There are no typos here.
+Everything looks good.
+All words are properly spelled.

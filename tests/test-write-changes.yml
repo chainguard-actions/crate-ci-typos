@@ -1,0 +1,38 @@
+name: Test write changes - auto-fix typos
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Copy fixture file with typo to a writable location
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/tests/tmp"
+          cp "$GITHUB_WORKSPACE/tests/fixtures/typo.txt" "$GITHUB_WORKSPACE/tests/tmp/fixable.txt"
+          echo "Content before fix:"
+          cat "$GITHUB_WORKSPACE/tests/tmp/fixable.txt"
+
+      - name: Run typos action with write_changes enabled
+        id: action
+        uses: .
+        with:
+          files: tests/tmp/fixable.txt
+          isolated: true
+          write_changes: true
+
+      - name: Assert typo was fixed in the file
+        run: |
+          echo "Content after fix:"
+          cat "$GITHUB_WORKSPACE/tests/tmp/fixable.txt"
+          if grep -q "teh" "$GITHUB_WORKSPACE/tests/tmp/fixable.txt"; then
+            echo "FAIL: typo 'teh' was not fixed in the file"
+            exit 1
+          fi
+          if grep -q "the" "$GITHUB_WORKSPACE/tests/tmp/fixable.txt"; then
+            echo "PASS: typo was corrected to 'the'"
+          else
+            echo "FAIL: expected 'the' to be present after fix"
+            exit 1
+          fi

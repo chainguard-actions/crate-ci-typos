@@ -40,11 +40,11 @@ if [[ ! -x ${COMMAND} ]]; then
     FILE_NAME="${CMD_NAME}-v${VERSION}-${TARGET_FILE}.${FILE_EXT}"
     log "Downloading '${CMD_NAME}' v${VERSION}"
     wget --progress=dot:mega "https://github.com/crate-ci/typos/releases/download/v${VERSION}/${FILE_NAME}"
-    mkdir -p ${_INSTALL_DIR}
+    mkdir -p "${_INSTALL_DIR}"
     if [[ "$FILE_EXT" == "zip" ]]; then
-        unzip -o "${FILE_NAME}" -d ${_INSTALL_DIR} ${CMD_NAME}.exe
+        unzip -o "${FILE_NAME}" -d "${_INSTALL_DIR}" ${CMD_NAME}.exe
     else
-        tar -xzvf "${FILE_NAME}" -C ${_INSTALL_DIR} ./${CMD_NAME}
+        tar -xzvf "${FILE_NAME}" -C "${_INSTALL_DIR}" ./${CMD_NAME}
     fi
     rm "${FILE_NAME}"
 fi
