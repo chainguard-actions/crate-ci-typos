@@ -1,0 +1,26 @@
+name: Test isolated mode - ignore implicit config files
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_WORKSPACE: ${{ github.workspace }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create test files
+        run: |
+          mkdir -p /tmp/test-isolated
+          echo "This is a correctly spelled file." > /tmp/test-isolated/content.txt
+
+      - id: action
+        uses: .
+        with:
+          files: /tmp/test-isolated
+          isolated: "true"
+
+      - name: Assert action succeeded in isolated mode
+        run: |
+          echo "PASS: typos action completed successfully in isolated mode"

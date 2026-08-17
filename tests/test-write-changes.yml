@@ -1,0 +1,38 @@
+name: Test write_changes mode
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a file with a known typo
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/test-tmp/write-changes"
+          # "teh" is a well-known typo for "the"
+          echo "teh quick brown fox" > "$GITHUB_WORKSPACE/test-tmp/write-changes/typo.txt"
+          echo "Original content:"
+          cat "$GITHUB_WORKSPACE/test-tmp/write-changes/typo.txt"
+
+      - id: action
+        uses: .
+        with:
+          files: "${{ github.workspace }}/test-tmp/write-changes/typo.txt"
+          isolated: true
+          write_changes: true
+
+      - name: Assert typo was fixed in the file
+        run: |
+          echo "File content after write_changes:"
+          cat "$GITHUB_WORKSPACE/test-tmp/write-changes/typo.txt"
+          if grep -q "teh" "$GITHUB_WORKSPACE/test-tmp/write-changes/typo.txt"; then
+            echo "FAIL: typo 'teh' was not corrected in the file"
+            exit 1
+          fi
+          if grep -q "the" "$GITHUB_WORKSPACE/test-tmp/write-changes/typo.txt"; then
+            echo "PASS: typo was corrected to 'the'"
+          else
+            echo "FAIL: expected 'the' in the corrected file"
+            exit 1
+          fi

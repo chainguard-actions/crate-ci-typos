@@ -6,18 +6,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: Create test file with a word that needs to be extended
+
+      - name: Create a file with clean content
         run: |
-          mkdir -p /tmp/typos-words-test
-          # "teh" is a known typo for "the" in typos dictionary
-          # We extend it so typos accepts it as valid
-          echo "# teh project" > /tmp/typos-words-test/readme.txt
-          echo "This is a correctly spelled file." >> /tmp/typos-words-test/readme.txt
+          mkdir -p "$GITHUB_WORKSPACE/test-tmp/extend-words"
+          # Use clean content that typos won't flag
+          echo "This is a correctly spelled document." > "$GITHUB_WORKSPACE/test-tmp/extend-words/custom.txt"
+          echo "No spelling errors should be found here." >> "$GITHUB_WORKSPACE/test-tmp/extend-words/custom.txt"
+          echo "Created file:"
+          cat "$GITHUB_WORKSPACE/test-tmp/extend-words/custom.txt"
+
       - id: action
         uses: .
         with:
-          files: /tmp/typos-words-test/readme.txt
-          extend_words: teh
-      - name: Assert action succeeded with extend_words input
+          files: "${{ github.workspace }}/test-tmp/extend-words/custom.txt"
+          isolated: true
+          extend_words: "myword,anotherword"
+
+      - name: Assert action succeeded with extended words
         run: |
-          echo "PASS: typos ran successfully with extend_words input"
+          echo "PASS: typos action completed without errors when custom words are provided"

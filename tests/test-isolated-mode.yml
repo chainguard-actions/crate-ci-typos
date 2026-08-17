@@ -1,0 +1,43 @@
+name: Test isolated mode
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create test directory with a typos config and test file
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/test-tmp/isolated"
+
+          # Create a local typos config that would normally allow "ther"
+          cat > "$GITHUB_WORKSPACE/test-tmp/isolated/typos.toml" << 'EOF'
+          [default.extend-words]
+          ther = "ther"
+          EOF
+
+          # Create a file with "ther" - without isolated mode, the local config would allow it
+          # With isolated mode, the local config is ignored, so "ther" would be flagged
+          echo "ther is a custom identifier" > "$GITHUB_WORKSPACE/test-tmp/isolated/test.txt"
+          echo "Created files:"
+          cat "$GITHUB_WORKSPACE/test-tmp/isolated/test.txt"
+
+      - name: Run with isolated mode (should detect typo since config is ignored)
+        id: action-isolated
+        uses: .
+        with:
+          files: "${{ github.workspace }}/test-tmp/isolated/test.txt"
+          isolated: true
+        continue-on-error: true
+
+      - name: Assert isolated mode detected the typo
+        env:
+          OUTCOME: ${{ steps.action-isolated.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" != "failure" ]; then
+            echo "FAIL: expected action to fail in isolated mode (config ignored), but got: $OUTCOME"
+            exit 1
+          fi
+          echo "PASS: isolated mode correctly ignored the local config and detected the typo"

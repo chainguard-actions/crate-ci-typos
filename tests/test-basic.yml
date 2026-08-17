@@ -1,19 +1,27 @@
-name: Test basic usage
+name: Test basic usage - no typos
 on:
   workflow_dispatch:
+
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_WORKSPACE: ${{ github.workspace }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
       - name: Create a file with correct spelling
         run: |
-          mkdir -p /tmp/typos-test
-          echo "This is a correctly spelled file." > /tmp/typos-test/sample.txt
+          mkdir -p /tmp/test-files
+          echo "This is a correctly spelled file." > /tmp/test-files/correct.txt
+          echo "Hello world, everything looks good here." >> /tmp/test-files/correct.txt
+
       - id: action
         uses: .
         with:
-          files: /tmp/typos-test/sample.txt
+          files: /tmp/test-files
+          isolated: "true"
+
       - name: Assert action succeeded
         run: |
-          echo "PASS: typos ran successfully on a correctly spelled file"
+          echo "PASS: typos action completed successfully with no typos found"
