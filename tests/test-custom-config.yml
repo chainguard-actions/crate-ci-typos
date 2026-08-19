@@ -1,0 +1,31 @@
+name: Test custom config file
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create custom config and test files
+        run: |
+          mkdir -p /tmp/typos-config-test
+
+          # Create a typos config that extends words to allow "teh" as a valid word
+          cat > /tmp/typos-config-test/typos.toml << 'EOF'
+          [default.extend-words]
+          teh = "teh"
+          EOF
+
+          # Create a file that uses "teh" - normally a typo but allowed by config
+          echo "teh is allowed by custom config" > /tmp/typos-config-test/content.txt
+
+      - id: action
+        uses: .
+        with:
+          files: /tmp/typos-config-test/content.txt
+          config: /tmp/typos-config-test/typos.toml
+
+      - name: Assert action succeeded with custom config allowing the word
+        run: |
+          echo "PASS: typos action completed successfully with custom config"

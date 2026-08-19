@@ -1,0 +1,35 @@
+name: Test write_changes mode
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create file with a known typo
+        run: |
+          mkdir -p /tmp/typos-write-test
+          # "teh" is a well-known typo for "the"
+          echo "teh quick brown fox" > /tmp/typos-write-test/content.txt
+          echo "Original content:"
+          cat /tmp/typos-write-test/content.txt
+
+      - id: action
+        uses: .
+        with:
+          files: /tmp/typos-write-test/content.txt
+          write_changes: true
+          isolated: true
+
+      - name: Assert typo was corrected in the file
+        run: |
+          echo "File content after write_changes:"
+          cat /tmp/typos-write-test/content.txt
+          if grep -q "^the quick brown fox" /tmp/typos-write-test/content.txt; then
+            echo "PASS: typo 'teh' was corrected to 'the'"
+          else
+            echo "FAIL: expected 'teh' to be corrected to 'the'"
+            cat /tmp/typos-write-test/content.txt
+            exit 1
+          fi
