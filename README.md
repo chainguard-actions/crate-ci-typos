@@ -8,6 +8,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 
 | Version | Tag | Upstream commit |
 |---------|-----|-----------------|
+| v1 | [`v1`](https://github.com/chainguard-actions/crate-ci-typos/tree/v1) | [`631208b`](https://github.com/crate-ci/typos/commit/631208b7aac2daa8b707f55e7331f9112b0e062d) |
 | v1.44.0 | [`v1.44.0`](https://github.com/chainguard-actions/crate-ci-typos/tree/v1.44.0) | [`631208b`](https://github.com/crate-ci/typos/commit/631208b7aac2daa8b707f55e7331f9112b0e062d) |
 | v1.46.1 | [`v1.46.1`](https://github.com/chainguard-actions/crate-ci-typos/tree/v1.46.1) | [`5374cbf`](https://github.com/crate-ci/typos/commit/5374cbf686e897b15713110e233094e2874de7ef) |
 | v1.46.2 | [`v1.46.2`](https://github.com/chainguard-actions/crate-ci-typos/tree/v1.46.2) | [`aca895b`](https://github.com/crate-ci/typos/commit/aca895bf05aec0cb7dffa6f94495e923224d9f17) |
