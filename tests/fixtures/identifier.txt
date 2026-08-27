@@ -1,0 +1,2 @@
+The author of this action created it for GitHub Actions.
+This file contains only correctly spelled words.

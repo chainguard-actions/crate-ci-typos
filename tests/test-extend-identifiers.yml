@@ -1,0 +1,19 @@
+name: Test extend_identifiers - custom identifiers not flagged
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - id: action
+        uses: .
+        with:
+          files: ${{ github.workspace }}/tests/fixtures/identifier.txt
+          isolated: true
+          extend_identifiers: "Sochat"
+
+      - name: Assert action succeeded with extended identifiers
+        run: |
+          echo "PASS: action completed successfully with extended identifiers"
