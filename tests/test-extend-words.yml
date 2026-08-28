@@ -1,0 +1,28 @@
+name: Test extend_words input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create test file with custom word that typos might flag
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/hardened/tests/tmp-extend-words"
+          # "wrd" is a made-up abbreviation; we'll add it as an extend_word so typos ignores it
+          echo "This is a wrd used in our project." > "$GITHUB_WORKSPACE/hardened/tests/tmp-extend-words/sample.txt"
+
+      - id: action
+        uses: .
+        with:
+          files: hardened/tests/tmp-extend-words/sample.txt
+          extend_words: "wrd"
+
+      - name: Cleanup
+        if: always()
+        run: rm -rf "$GITHUB_WORKSPACE/hardened/tests/tmp-extend-words"
+
+      - name: Assert action succeeded
+        run: |
+          echo "PASS: action completed without error (extend_words accepted)"

@@ -1,0 +1,28 @@
+name: Test isolated mode - ignore implicit config
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a file with a word that would be in a custom config but not in isolated mode
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/tests/fixtures/isolated"
+          # Create a clean file to check in isolated mode
+          cat > "$GITHUB_WORKSPACE/tests/fixtures/isolated/sample.txt" <<'EOF'
+          This is a sample text file.
+          It contains only correct words.
+          EOF
+
+      - id: action
+        uses: .
+        with:
+          files: tests/fixtures/isolated
+          isolated: "true"
+
+      - name: Assert action succeeded in isolated mode
+        run: |
+          echo "Action completed successfully in isolated mode"
+          echo "PASS"

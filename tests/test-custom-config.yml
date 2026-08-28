@@ -1,0 +1,33 @@
+name: Test custom config - use custom configuration file
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create custom config and test file
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/tests/fixtures/custom-config"
+          # Create a typos config that extends words to allow "teh" as a valid word
+          cat > "$GITHUB_WORKSPACE/tests/fixtures/custom-config/typos.toml" <<'EOF'
+          [default.extend-words]
+          teh = "teh"
+          EOF
+          # Create a file that uses the word "teh" which would normally be flagged
+          cat > "$GITHUB_WORKSPACE/tests/fixtures/custom-config/content.txt" <<'EOF'
+          This file uses teh as a valid identifier.
+          EOF
+
+      - id: action
+        uses: .
+        with:
+          files: tests/fixtures/custom-config/content.txt
+          isolated: "true"
+          config: tests/fixtures/custom-config/typos.toml
+
+      - name: Assert action succeeded with custom config (teh allowed)
+        run: |
+          echo "Action completed successfully with custom config"
+          echo "PASS"

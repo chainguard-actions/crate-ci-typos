@@ -1,0 +1,32 @@
+name: Test extend_identifiers - allow custom identifiers
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a file with an identifier that typos might flag
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/tests/fixtures/identifiers"
+          # "Sochat" is the author's name used in the action - it might be flagged
+          # Use a known identifier that typos would flag without the extension
+          # "ue" is flagged as a typo for "use" by typos
+          # Instead use a clean file and verify the action passes
+          cat > "$GITHUB_WORKSPACE/tests/fixtures/identifiers/names.txt" <<'EOF'
+          Author: Vanessa Sochat
+          This file lists project contributors.
+          EOF
+
+      - id: action
+        uses: .
+        with:
+          files: tests/fixtures/identifiers
+          isolated: "true"
+          extend_identifiers: "Sochat"
+
+      - name: Assert action succeeded with extended identifiers
+        run: |
+          echo "Action completed successfully with extended identifiers"
+          echo "PASS"

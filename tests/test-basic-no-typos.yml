@@ -1,0 +1,28 @@
+name: Test basic usage - no typos
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a file with no typos
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/tests/fixtures/clean"
+          cat > "$GITHUB_WORKSPACE/tests/fixtures/clean/README.md" <<'EOF'
+          # Clean File
+          This file has no spelling errors.
+          Everything is correct here.
+          EOF
+
+      - id: action
+        uses: .
+        with:
+          files: tests/fixtures/clean
+          isolated: "true"
+
+      - name: Assert action succeeded (no typos found)
+        run: |
+          echo "Action completed successfully - no typos detected"
+          echo "PASS"
