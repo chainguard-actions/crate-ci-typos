@@ -1,0 +1,34 @@
+name: Test custom config file
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a custom config and a file to check
+        run: |
+          mkdir -p /tmp/typos-config
+          # Create a typos config that extends words to allow a custom term
+          cat > /tmp/typos-config/typos.toml << 'EOF'
+          [default.extend-words]
+          # Allow "fo" as a valid word (normally might be flagged)
+          fo = "fo"
+          EOF
+          # Create a clean file to check
+          cat > /tmp/typos-config/content.txt << 'EOF'
+          This is a clean file with correct spelling.
+          Everything looks good here.
+          EOF
+
+      - id: action
+        uses: .
+        with:
+          files: /tmp/typos-config/content.txt
+          config: /tmp/typos-config/typos.toml
+
+      - name: Assert action succeeded with custom config
+        run: |
+          echo "PASS: action completed successfully with custom config file"

@@ -1,0 +1,28 @@
+name: Test isolated mode
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a clean file and a typos config that would extend identifiers
+        run: |
+          mkdir -p /tmp/typos-isolated
+          # Write a file with a word that would normally be flagged but we want to allow
+          cat > /tmp/typos-isolated/clean.txt << 'EOF'
+          This is a clean file with correct spelling.
+          No typos here at all.
+          EOF
+
+      - id: action
+        uses: .
+        with:
+          files: /tmp/typos-isolated/clean.txt
+          isolated: true
+
+      - name: Assert action succeeded in isolated mode
+        run: |
+          echo "PASS: action completed successfully in isolated mode"

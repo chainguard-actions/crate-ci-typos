@@ -1,0 +1,25 @@
+name: Test extend_words input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create test file with custom word that typos would flag
+        run: |
+          mkdir -p /tmp/typos-test-extend-words
+          # "wrd" might be flagged as a typo; we add it to extend_words so it's ignored
+          echo "This file uses the word wrd as a custom identifier." > /tmp/typos-test-extend-words/sample.txt
+
+      - id: action
+        uses: .
+        with:
+          files: /tmp/typos-test-extend-words
+          extend_words: "wrd"
+
+      - name: Assert action succeeded
+        run: |
+          echo "Action completed successfully with extend_words input"
+          echo "PASS"

@@ -1,0 +1,39 @@
+name: Test write changes mode
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a file with a known typo
+        run: |
+          mkdir -p /tmp/typos-write
+          # "teh" is a well-known typo for "the"
+          printf 'teh quick brown fox\n' > /tmp/typos-write/fixme.txt
+          echo "Before fix:"
+          cat /tmp/typos-write/fixme.txt
+
+      - id: action
+        uses: .
+        with:
+          files: /tmp/typos-write/fixme.txt
+          isolated: true
+          write_changes: true
+
+      - name: Assert the typo was corrected in the file
+        run: |
+          echo "After fix:"
+          cat /tmp/typos-write/fixme.txt
+          if grep -q "teh" /tmp/typos-write/fixme.txt; then
+            echo "FAIL: typo 'teh' was not corrected in the file"
+            exit 1
+          fi
+          if grep -q "the" /tmp/typos-write/fixme.txt; then
+            echo "PASS: typo was corrected to 'the'"
+          else
+            echo "FAIL: expected 'the' in the file after correction"
+            exit 1
+          fi
