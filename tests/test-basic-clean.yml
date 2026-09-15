@@ -1,0 +1,24 @@
+name: Test basic usage - clean files
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a clean file with no typos
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/typos-test-clean"
+          echo "This is a clean file with correct spelling." > "$GITHUB_WORKSPACE/typos-test-clean/clean.txt"
+          echo "Hello world, everything looks good here." >> "$GITHUB_WORKSPACE/typos-test-clean/clean.txt"
+
+      - id: action
+        name: Run typos on clean files
+        uses: .
+        with:
+          files: ./typos-test-clean
+
+      - name: Assert action succeeded (no typos found)
+        run: |
+          echo "PASS: typos action completed successfully on clean files"

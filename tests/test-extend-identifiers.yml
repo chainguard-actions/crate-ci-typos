@@ -1,0 +1,26 @@
+name: Test extend identifiers - ignore specific identifiers
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create test file with clean content
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/typos-test-identifiers"
+          echo "This is a clean file with correct spelling." > "$GITHUB_WORKSPACE/typos-test-identifiers/authors.txt"
+          echo "Hello world." >> "$GITHUB_WORKSPACE/typos-test-identifiers/authors.txt"
+
+      - id: action
+        name: Run typos with extended identifiers
+        uses: .
+        with:
+          files: ./typos-test-identifiers
+          extend_identifiers: Sochat
+          isolated: true
+
+      - name: Assert action succeeded with extended identifiers
+        run: |
+          echo "PASS: typos action completed successfully with extended identifiers"

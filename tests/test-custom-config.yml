@@ -1,0 +1,26 @@
+name: Test custom config file
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create custom config and test files
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/typos-test-config"
+          printf '[default]\nextend-ignore-identifiers-re = ["Sochat"]\n' > "$GITHUB_WORKSPACE/typos-test-config/typos.toml"
+          echo "This is a clean file with correct spelling." > "$GITHUB_WORKSPACE/typos-test-config/clean.txt"
+          echo "Author: Vanessa Sochat" >> "$GITHUB_WORKSPACE/typos-test-config/clean.txt"
+
+      - id: action
+        name: Run typos with custom config
+        uses: .
+        with:
+          files: ./typos-test-config/clean.txt
+          config: ./typos-test-config/typos.toml
+
+      - name: Assert action succeeded with custom config
+        run: |
+          echo "PASS: typos action completed successfully with custom config"

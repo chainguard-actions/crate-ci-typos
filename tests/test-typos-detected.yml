@@ -1,0 +1,36 @@
+name: Test typos detection - files with spelling errors
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a file with typos
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/typos-test-errors"
+          echo "This is teh file with speling errors." > "$GITHUB_WORKSPACE/typos-test-errors/typos.txt"
+          echo "The recieve function is importent." >> "$GITHUB_WORKSPACE/typos-test-errors/typos.txt"
+
+      - id: action
+        name: Run typos on files with errors
+        uses: .
+        with:
+          files: ./typos-test-errors
+        continue-on-error: true
+
+      - name: Assert action failed (typos were found)
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" = "failure" ]; then
+            echo "PASS: typos action correctly detected spelling errors and failed"
+          elif [ "$OUTCOME" = "success" ]; then
+            echo "FAIL: expected typos to be detected but action succeeded"
+            exit 1
+          else
+            echo "FAIL: unexpected outcome '$OUTCOME'"
+            exit 1
+          fi

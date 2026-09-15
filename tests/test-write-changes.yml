@@ -1,0 +1,32 @@
+name: Test write changes mode - auto-correct typos
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a file with typos for write-changes test
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/typos-test-write"
+          echo "teh quick brown fox" > "$GITHUB_WORKSPACE/typos-test-write/typos.txt"
+
+      - id: action
+        name: Run typos with write-changes enabled
+        uses: .
+        with:
+          files: ./typos-test-write
+          write_changes: true
+
+      - name: Assert action succeeded and file was corrected
+        run: |
+          echo "Checking if typos were corrected..."
+          CONTENT=$(cat "$GITHUB_WORKSPACE/typos-test-write/typos.txt")
+          echo "File content after write-changes: $CONTENT"
+          if echo "$CONTENT" | grep -q "^the quick brown fox"; then
+            echo "PASS: typos were auto-corrected successfully"
+          else
+            echo "FAIL: expected 'teh' to be corrected to 'the', got: $CONTENT"
+            exit 1
+          fi
