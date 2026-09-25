@@ -1,0 +1,24 @@
+name: Test extend_words input is accepted
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a clean file to check
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/tests/fixtures/extend-words"
+          printf 'Hello world. This is a clean file with correct spelling.\n' > "$GITHUB_WORKSPACE/tests/fixtures/extend-words/clean.txt"
+
+      - id: action
+        uses: .
+        with:
+          files: tests/fixtures/extend-words
+          isolated: true
+          extend_words: "myword,anotherword"
+
+      - name: Assert action succeeded with extend_words input
+        run: |
+          echo "PASS: action accepted extend_words input and completed successfully"

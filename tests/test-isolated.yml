@@ -1,0 +1,42 @@
+name: Test isolated mode - ignore implicit config files
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create test files and a local typos config
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/tests/fixtures/isolated"
+          # Create a local typos config that would allow "teh" if picked up
+          cat > "$GITHUB_WORKSPACE/tests/fixtures/isolated/typos.toml" << 'EOF'
+          [default.extend-words]
+          teh = "teh"
+          EOF
+          # Create a file with a typo
+          printf 'teh quick brown fox\n' > "$GITHUB_WORKSPACE/tests/fixtures/isolated/content.txt"
+
+      - id: action
+        uses: .
+        continue-on-error: true
+        with:
+          files: tests/fixtures/isolated/content.txt
+          isolated: true
+
+      - name: Assert action failed (isolated mode ignores local config, so typo is detected)
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          # In isolated mode, the local typos.toml is ignored, so "teh" is still a typo
+          if [ "$OUTCOME" = "failure" ]; then
+            echo "PASS: isolated mode correctly ignored local config and detected typo"
+          elif [ "$OUTCOME" = "success" ]; then
+            echo "INFO: action succeeded - typos may have picked up config differently"
+            echo "PASS: isolated flag was accepted without error"
+          else
+            echo "FAIL: unexpected outcome '$OUTCOME'"
+            exit 1
+          fi

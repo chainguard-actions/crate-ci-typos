@@ -1,0 +1,24 @@
+name: Test extend_identifiers input is accepted
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a clean file to check
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/tests/fixtures/identifiers"
+          printf 'Hello world. This is a clean file with correct spelling.\n' > "$GITHUB_WORKSPACE/tests/fixtures/identifiers/clean.txt"
+
+      - id: action
+        uses: .
+        with:
+          files: tests/fixtures/identifiers
+          isolated: true
+          extend_identifiers: "Sochat,myIdentifier"
+
+      - name: Assert action succeeded with extend_identifiers input
+        run: |
+          echo "PASS: action accepted extend_identifiers input and completed successfully"

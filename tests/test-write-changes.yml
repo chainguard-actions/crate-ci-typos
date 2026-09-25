@@ -1,0 +1,40 @@
+name: Test write_changes - auto-fix typos
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a file with a known typo
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/tests/fixtures/write-changes"
+          # "teh" is a well-known typo for "the"
+          printf 'teh quick brown fox\n' > "$GITHUB_WORKSPACE/tests/fixtures/write-changes/fixme.txt"
+          echo "Before fix:"
+          cat "$GITHUB_WORKSPACE/tests/fixtures/write-changes/fixme.txt"
+
+      - id: action
+        uses: .
+        with:
+          files: tests/fixtures/write-changes
+          isolated: true
+          write_changes: true
+
+      - name: Assert typo was fixed in the file
+        run: |
+          echo "After fix:"
+          cat "$GITHUB_WORKSPACE/tests/fixtures/write-changes/fixme.txt"
+          CONTENT=$(cat "$GITHUB_WORKSPACE/tests/fixtures/write-changes/fixme.txt")
+          echo "content: $CONTENT"
+          if echo "$CONTENT" | grep -q "teh"; then
+            echo "FAIL: typo 'teh' was not fixed in the file"
+            exit 1
+          fi
+          if echo "$CONTENT" | grep -q "the"; then
+            echo "PASS: typo 'teh' was corrected to 'the'"
+          else
+            echo "FAIL: expected 'the' in fixed content but got: $CONTENT"
+            exit 1
+          fi

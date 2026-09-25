@@ -1,0 +1,30 @@
+name: Test custom config file
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create custom config and test files
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/tests/fixtures/custom-config"
+          # Create a typos config that extends words to allow "ther"
+          cat > "$GITHUB_WORKSPACE/tests/fixtures/custom-config/typos.toml" << 'EOF'
+          [default.extend-words]
+          ther = "ther"
+          EOF
+          # Create a file that uses the custom word
+          printf 'ther is a custom word allowed by config\n' > "$GITHUB_WORKSPACE/tests/fixtures/custom-config/content.txt"
+
+      - id: action
+        uses: .
+        with:
+          files: tests/fixtures/custom-config/content.txt
+          config: tests/fixtures/custom-config/typos.toml
+          isolated: true
+
+      - name: Assert action succeeded with custom config
+        run: |
+          echo "PASS: action completed successfully using custom config file"
