@@ -23,6 +23,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 | v1.50.1 | [`v1.50.1`](https://github.com/chainguard-actions/crate-ci-typos/tree/v1.50.1) | [`d43b6c0`](https://github.com/crate-ci/typos/commit/d43b6c087ac471e2ea7b8af622ff15f05c0c365b) |
 | v1.50.2 | [`v1.50.2`](https://github.com/chainguard-actions/crate-ci-typos/tree/v1.50.2) | [`512fc24`](https://github.com/crate-ci/typos/commit/512fc24f32f44ab01972217aaaf3dc86ec234d53) |
 | v1.50.3 | [`v1.50.3`](https://github.com/chainguard-actions/crate-ci-typos/tree/v1.50.3) | [`00f422f`](https://github.com/crate-ci/typos/commit/00f422f3b19c57bc6338715ebfe3316d38768461) |
+| v1.51.0 | [`v1.51.0`](https://github.com/chainguard-actions/crate-ci-typos/tree/v1.51.0) | [`dcea711`](https://github.com/crate-ci/typos/commit/dcea7116aaf94953292ab6ce0907fe483ef15406) |
 
 ## Privacy
 
