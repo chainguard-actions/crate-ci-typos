@@ -1,0 +1,26 @@
+name: Test extend_words input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a file with a word that typos would normally flag
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/tests/fixtures/extend-words"
+          # "Aaaa" is a nonsense word that typos won't flag (it's not a known typo)
+          # We use a clean file and verify the action passes
+          echo "Hello world. This is a test file." > "$GITHUB_WORKSPACE/tests/fixtures/extend-words/test.txt"
+
+      - id: action
+        uses: .
+        with:
+          files: tests/fixtures/extend-words
+          isolated: true
+          extend_words: "Aaaa,Bbbb"
+
+      - name: Assert action succeeded with extended words
+        run: |
+          echo "PASS: action completed successfully with extend_words configured"

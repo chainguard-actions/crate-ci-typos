@@ -1,0 +1,29 @@
+name: Test extend_identifiers input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create test file with a word that looks like a typo but is an identifier
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/hardened/tests/tmp-extend-identifiers"
+          # "Sochat" might be flagged as a typo without extend_identifiers
+          echo "Author: Vanessa Sochat" > "$GITHUB_WORKSPACE/hardened/tests/tmp-extend-identifiers/test.txt"
+
+      - id: action
+        uses: .
+        with:
+          files: hardened/tests/tmp-extend-identifiers/test.txt
+          extend_identifiers: Sochat
+          isolated: true
+
+      - name: Cleanup
+        if: always()
+        run: rm -rf "$GITHUB_WORKSPACE/hardened/tests/tmp-extend-identifiers"
+
+      - name: Assert typos action succeeded with extend_identifiers
+        run: |
+          echo "PASS: action completed successfully with extend_identifiers input"

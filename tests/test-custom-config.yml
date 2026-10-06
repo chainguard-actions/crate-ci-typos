@@ -1,0 +1,29 @@
+name: Test custom config file
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create test files and custom config
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/tests/fixtures/custom-config"
+          # Create a clean file to check
+          echo "Hello world. This is a clean file." > "$GITHUB_WORKSPACE/tests/fixtures/custom-config/clean.txt"
+          # Create a custom typos config that extends identifiers
+          cat > "$GITHUB_WORKSPACE/tests/fixtures/custom-config/typos.toml" <<'EOF'
+          [default]
+          extend-ignore-identifiers-re = ["[A-Z]{3,}"]
+          EOF
+
+      - id: action
+        uses: .
+        with:
+          files: tests/fixtures/custom-config/clean.txt
+          config: tests/fixtures/custom-config/typos.toml
+
+      - name: Assert action succeeded with custom config
+        run: |
+          echo "PASS: action completed successfully with custom config"
