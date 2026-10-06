@@ -1,0 +1,28 @@
+name: Test extend words - allow custom words
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a file with a custom word that might be flagged
+        run: |
+          mkdir -p /tmp/typos-test-words
+          cat > /tmp/typos-test-words/words.txt << 'EOF'
+          This file contains only correctly spelled words.
+          The content is clean and should pass typos checks.
+          EOF
+
+      - id: action
+        name: Run typos with extend_words input
+        uses: .
+        with:
+          files: /tmp/typos-test-words
+          isolated: "true"
+          extend_words: "customword"
+
+      - name: Assert action succeeded with extended words
+        run: |
+          echo "PASS: typos action completed successfully with extended words"

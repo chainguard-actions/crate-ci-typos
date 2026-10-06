@@ -1,0 +1,27 @@
+name: Test isolated mode - ignore implicit config files
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a clean file for isolated mode test
+        run: |
+          mkdir -p /tmp/typos-test-isolated
+          cat > /tmp/typos-test-isolated/sample.txt << 'EOF'
+          This is a sample file for testing isolated mode.
+          Isolated mode ignores implicit configuration files.
+          EOF
+
+      - id: action
+        name: Run typos with isolated mode enabled
+        uses: .
+        with:
+          files: /tmp/typos-test-isolated
+          isolated: "true"
+
+      - name: Assert action succeeded in isolated mode
+        run: |
+          echo "PASS: typos action completed successfully in isolated mode"

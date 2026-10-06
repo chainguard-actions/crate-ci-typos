@@ -1,0 +1,29 @@
+name: Test extend identifiers - allow custom identifiers
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a file with a custom identifier that looks like a typo
+        run: |
+          mkdir -p /tmp/typos-test-identifiers
+          # "Sochat" is a name that might be flagged - use it as an identifier
+          cat > /tmp/typos-test-identifiers/names.txt << 'EOF'
+          Author: Vanessa Sochat
+          This file references a custom identifier.
+          EOF
+
+      - id: action
+        name: Run typos with extend_identifiers to allow custom names
+        uses: .
+        with:
+          files: /tmp/typos-test-identifiers
+          isolated: "true"
+          extend_identifiers: "Sochat"
+
+      - name: Assert action succeeded with extended identifiers
+        run: |
+          echo "PASS: typos action completed successfully with extended identifiers"
