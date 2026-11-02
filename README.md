@@ -25,6 +25,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 | v1.50.3 | [`v1.50.3`](https://github.com/chainguard-actions/crate-ci-typos/tree/v1.50.3) | [`00f422f`](https://github.com/crate-ci/typos/commit/00f422f3b19c57bc6338715ebfe3316d38768461) | [`HARDENING.md`](https://github.com/chainguard-actions/crate-ci-typos/blob/v1.50.3/HARDENING.md) |
 | v1.51.0 | [`v1.51.0`](https://github.com/chainguard-actions/crate-ci-typos/tree/v1.51.0) | [`dcea711`](https://github.com/crate-ci/typos/commit/dcea7116aaf94953292ab6ce0907fe483ef15406) | [`HARDENING.md`](https://github.com/chainguard-actions/crate-ci-typos/blob/v1.51.0/HARDENING.md) |
 | v1.51.1 | [`v1.51.1`](https://github.com/chainguard-actions/crate-ci-typos/tree/v1.51.1) | [`7f9d081`](https://github.com/crate-ci/typos/commit/7f9d0819ca1c008ade73f4b41fa9d258d48f605b) | [`HARDENING.md`](https://github.com/chainguard-actions/crate-ci-typos/blob/v1.51.1/HARDENING.md) |
+| v1.52.0 | [`v1.52.0`](https://github.com/chainguard-actions/crate-ci-typos/tree/v1.52.0) | [`4c8b7f5`](https://github.com/crate-ci/typos/commit/4c8b7f51ca60df14e3c5ca82770dfbbe6c3dae85) | [`HARDENING.md`](https://github.com/chainguard-actions/crate-ci-typos/blob/v1.52.0/HARDENING.md) |
 
 ## Privacy
 
