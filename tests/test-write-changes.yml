@@ -1,0 +1,30 @@
+name: Test write_changes fixes typos
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Create file with typo
+        run: |
+          mkdir -p write-test
+          echo "This sentence has teh typo." > write-test/sample.txt
+      - id: action
+        uses: .
+        with:
+          files: write-test
+          isolated: "true"
+          write_changes: "true"
+      - name: Assert file corrected
+        run: |
+          cat write-test/sample.txt
+          if grep -qw teh write-test/sample.txt; then
+            echo "FAIL: typo not fixed"
+            exit 1
+          fi
+          if ! grep -q "has the typo" write-test/sample.txt; then
+            echo "FAIL: expected correction to 'the'"
+            exit 1
+          fi
+          echo "PASS"
