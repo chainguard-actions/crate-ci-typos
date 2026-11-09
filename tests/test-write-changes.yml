@@ -1,0 +1,32 @@
+name: Test write_changes fixes typos
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Prepare writable copy
+        run: |
+          rm -rf write-target
+          mkdir -p write-target
+          cp tests/fixtures/typo/typo.txt write-target/typo.txt
+          cat write-target/typo.txt
+      - id: action
+        uses: .
+        with:
+          files: write-target/typo.txt
+          isolated: true
+          write_changes: true
+      - name: Assert file was corrected
+        run: |
+          echo "content:"; cat write-target/typo.txt
+          if grep -q "teh" write-target/typo.txt; then
+            echo "FAIL: typo still present"
+            exit 1
+          fi
+          if ! grep -q "This is the example sentence." write-target/typo.txt; then
+            echo "FAIL: expected corrected sentence"
+            exit 1
+          fi
+          echo "PASS"
