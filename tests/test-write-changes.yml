@@ -1,0 +1,36 @@
+name: Test write_changes fixes typos
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Ensure jq and wget are available
+        run: |
+          if ! command -v jq >/dev/null || ! command -v wget >/dev/null; then
+            sudo apt-get update && sudo apt-get install -y jq wget || apt-get update && apt-get install -y jq wget
+          fi
+      - name: Prepare writable copy
+        run: |
+          rm -rf write-target
+          mkdir -p write-target
+          cp tests/fixtures/typo.txt write-target/typo.txt
+      - id: action
+        uses: .
+        with:
+          files: write-target/typo.txt
+          isolated: "true"
+          write_changes: "true"
+      - name: Assert typo was corrected
+        run: |
+          cat write-target/typo.txt
+          if grep -q "recieve" write-target/typo.txt; then
+            echo "FAIL: typo still present"
+            exit 1
+          fi
+          if ! grep -q "receive" write-target/typo.txt; then
+            echo "FAIL: corrected word not found"
+            exit 1
+          fi
+          echo "PASS"

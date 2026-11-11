@@ -1,0 +1,2 @@
+This file is spelled correctly.
+We receive the message and read the document.

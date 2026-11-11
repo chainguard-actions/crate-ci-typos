@@ -1,0 +1,34 @@
+name: Test extend_identifiers and extend_words inputs
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Ensure jq and wget are available
+        run: |
+          if ! command -v jq >/dev/null || ! command -v wget >/dev/null; then
+            sudo apt-get update && sudo apt-get install -y jq wget || apt-get update && apt-get install -y jq wget
+          fi
+      - id: action
+        uses: .
+        with:
+          files: tests/fixtures/clean.txt
+          isolated: "true"
+          extend_identifiers: "Sochat,Vanessa"
+          extend_words: "teh,recieve"
+      - name: Assert action succeeded with extend inputs
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" != "success" ]; then
+            echo "FAIL: expected success"
+            exit 1
+          fi
+          if [ ! -x "$RUNNER_TEMP/typos" ]; then
+            echo "FAIL: typos binary not installed"
+            exit 1
+          fi
+          echo "PASS"
